@@ -1,0 +1,13 @@
+boldy_sylius_export:
+  gabarits:
+    export_command:
+        headers: ["Date de facture", "ID commande", "Reference la commande", "ID client", "Company", "Total paye(HT)", "Paiement", "Customer groups", "New Client",
+        "Voucher name", "Total reductions (HT)", "Total Frais de port (HT)", "Nom du transporteur", "Etat de la commande/Denomination", "Code postal (Livraison)",
+        "Ville (Livraison)", "Nom du pays (Livraison)"]
+        resource_keys: ["Payment_date", "Id", "Number", "Customer_id", "Shipping_company", "Total", "Payment_type", "Customer_groups", "Customer_new", "Voucher_name",
+                        "Voucher_total", "Shipping_total", "Shipping_method", "Shipping_state", "Shipping_postCode", "Shipping_city", "Shipping_country"]
+        formats:
+          csv:
+            exporter: boldy.exporters.order.csv
+          xls:
+            exporter: boldy.exporters.order.xls

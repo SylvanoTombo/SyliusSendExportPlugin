@@ -1,0 +1,23 @@
+boldy_sylius_export:
+  gabarits:
+    - export_command:
+        headers: ["Id", "Numero de Commande"]
+        resource_keys: ["Id", "Number"]
+        format:
+          csv:
+            exporter: csv_resource_exporter
+          xls:
+            exporter: xls_resource_exporter
+          pdf:
+            exporter: pdf_resource_expoter
+
+    - detail_command:
+        headers: ["Numero de Commande"]
+        resource_keys: ["Number"]
+        format:
+          csv:
+            exporter: csv_resource_exporter
+          xls:
+            exporter: xls_resource_exporter
+          pdf:
+            exporter: pdf_resource_expoter

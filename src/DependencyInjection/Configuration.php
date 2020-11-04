@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\SyliusExamplePlugin\DependencyInjection;
+namespace Boldy\SyliusExportPlugin\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -11,9 +11,37 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('acme_sylius_example_plugin');
+        $treeBuilder = new TreeBuilder('boldy_sylius_export');
         $rootNode = $treeBuilder->getRootNode();
 
-        return $treeBuilder;
+        $rootNode
+            ->fixXmlConfig('gabarit')
+            ->children()
+                ->arrayNode('gabarits')
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('headers')
+                                ->scalarPrototype()->end()
+                            ->end()
+                            ->arrayNode('resource_keys')
+                                ->scalarPrototype()->end()
+                            ->end()
+                            ->arrayNode('formats')
+                                ->isRequired()
+                                ->arrayPrototype()
+                                    ->children()
+                                        ->scalarNode('exporter')
+                                            ->isRequired()
+                                            ->cannotBeEmpty()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+
+            return $treeBuilder;
     }
 }

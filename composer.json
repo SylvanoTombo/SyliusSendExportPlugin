@@ -1,13 +1,15 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "boldy/sylius-export-plugin",
     "type": "sylius-plugin",
     "keywords": ["sylius", "sylius-plugin"],
     "description": "Acme example plugin for Sylius.",
     "license": "MIT",
     "require": {
         "php": "^7.3",
-
-        "sylius/sylius": "^1.8"
+        "portphp/csv": "^1.1",
+        "portphp/spreadsheet": "^1.0",
+        "sylius/sylius": "^1.8",
+        "symfony/doctrine-bridge": "<4.4.16"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -41,8 +43,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "Boldy\\SyliusExportPlugin\\": "src/",
+            "Tests\\Boldy\\SyliusExportPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

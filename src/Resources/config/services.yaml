@@ -1,0 +1,107 @@
+services:
+  boldy.gabarits_registry:
+    class: Boldy\SyliusExportPlugin\Registry\GabaritRegistry
+    arguments:
+      - Boldy\SyliusExportPlugin\Registry\GabaritInterface
+      - gabarit
+
+  boldy.controller.export:
+    class: Boldy\SyliusExportPlugin\Controller\ExportDataController
+    arguments:
+      - "@boldy.gabarits_registry"
+    tags:
+      - "controller.service_arguments"
+
+  Boldy\SyliusExportPlugin\Form\Type\ExportType:
+    arguments:
+      - "@service_container"
+    tags: ["form.type"]
+
+  boldy.service.address_concatenation:
+    class: Boldy\SyliusExportPlugin\Service\DefaultAddressConcatenation
+
+  # Exporter
+  boldy.exporters.order.csv:
+    class: Boldy\SyliusExportPlugin\Exporter\ResourceExporter
+    arguments:
+      - "@sylius.repository.order"
+      - "@boldy.exporter.csv_writer"
+      - "@boldy.pluginpool.legacy"
+      - '@boldy.exporters_transformer_pool'
+
+
+  boldy.exporters.order.xls:
+    class: Boldy\SyliusExportPlugin\Exporter\ResourceExporter
+    arguments:
+      - "@sylius.repository.order"
+      - "@boldy.exporter.xls_writer"
+      - "@boldy.pluginpool.legacy"
+      - '@boldy.exporters_transformer_pool'
+
+  boldy.pluginpool.legacy:
+    class: Boldy\SyliusExportPlugin\PluginPool\PluginPool
+    arguments:
+      - ["@boldy.plugin.order"]
+
+  boldy.exporters_transformer_pool:
+    class: Boldy\SyliusExportPlugin\Transformer\Pool
+    arguments: [!tagged boldy.exporter_transformer]
+
+
+
+  boldy.exporters_transformer_integer_money_format:
+      class: Boldy\SyliusExportPlugin\Transformer\Handler\IntegerToMoneyFormatHandler
+      arguments:
+          - ['Total', 'Voucher_total', 'Shipping_total']
+      tags:
+          - { name: boldy.exporter_transformer }
+
+  boldy.exporters_transformer_datetime:
+    class: Boldy\SyliusExportPlugin\Transformer\Handler\DateTimeToStringHandler
+    tags:
+        - { name: boldy.exporter_transformer }
+
+  boldy.exporters_transformer_array:
+      class: Boldy\SyliusExportPlugin\Transformer\Handler\ArrayToStringHandler
+      tags:
+          - { name: boldy.exporter_transformer }
+
+  boldy.exporters_transformer_negative_positive:
+    class: Boldy\SyliusExportPlugin\Transformer\Handler\NegativeToPositiveFormatHandler
+    arguments:
+      - ['Voucher_total']
+    tags:
+      - { name: boldy.exporter_transformer }
+
+  boldy.exporters_transformer_null_zero_value:
+    class: Boldy\SyliusExportPlugin\Transformer\Handler\NullToZeroValueHandler
+    arguments:
+      - ['Voucher_total']
+    tags:
+      - { name: boldy.exporter_transformer }
+
+  boldy.plugin.order:
+    class: Boldy\SyliusExportPlugin\Plugin\OrderResourcePlugin
+    arguments:
+      - "@sylius.repository.order"
+      - "@property_accessor"
+      - "@doctrine.orm.entity_manager"
+      - "@boldy.service.address_concatenation"
+
+  boldy.exporter.xls_writer:
+    class: Boldy\SyliusExportPlugin\Writer\SpreadsheetWriter
+    arguments:
+      - "@boldy.exporter.speadsheet_writer_factory"
+
+  boldy.exporter.csv_writer:
+    class: Boldy\SyliusExportPlugin\Writer\CsvWriter
+    arguments:
+      - "@port.csv_writer"
+
+  port.csv_writer:
+    class: Port\Csv\CsvWriter
+    arguments:
+      - ","
+
+  boldy.exporter.speadsheet_writer_factory:
+    class: Boldy\SyliusExportPlugin\Writer\PortSpreadsheetWriterFactory
